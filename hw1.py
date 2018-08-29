@@ -19,15 +19,13 @@ AIbins = [[1,2,3] for i in range(0, NumOfSticks+1)] #this creates a bin, where e
                                                #the potential moves to be chosen.
 
 global ai_win_dict
-ai_win_dict = {}
+ai_win_dict = {
+    "1" : "ok"
+}
 
 player = 1 #1 is human, 2 is AI...this is to swap players at the end of a given turn
 
-#print("Test of bins content: \nThere are", NumOfSticks, "bins, which are: \n", AIbins) #this is a test
 #AIbins[1].append(1) #this will add the winning moves to the list, increasing it's probability
-#choice = random.choice(AIbins[1]) #this is the random selector
-#print(choice)
-#print(AIbins)
 
 def ai_choice(x):
     ai_selection = random.choice(AIbins[x])
@@ -38,46 +36,64 @@ def human_choice(x):
     human_selection = random.choice(plays)
     return human_selection
 
-while NumOfSticks >= 0:
-    if player == 2:
-        #This is the ai player loop
-        if NumOfSticks == 1: 
-            NumofGames -= 1
-            NumOfSticks = 0
-            #ai_win_dict.clear()
-        elif NumOfSticks == 2:
-            play = 1
-        elif NumOfSticks == 3:
-            play = 2
-        elif NumOfSticks == 4:
-            play = 3
-        else:
-            play = ai_choice(NumOfSticks)
-            ai_win_dict[NumOfSticks] = play
-            print("Hello within AI move, Sticks: ", NumOfSticks, " Play: ", play)
+def main_game_loop(NumOfSticks, player):
+    while NumOfSticks >= 0:
+        if player == 2:
+            #This is the ai player loop
+            if NumOfSticks == 1:
+                NumOfSticks = 0
+                winner = 1
+                #ai_win_dict.clear()
+            elif NumOfSticks == 2:
+                play = 1
+                winner = 2
+            elif NumOfSticks == 3:
+                play = 2
+                winner = 2
+            elif NumOfSticks == 4:
+                play = 3
+                winner = 2
+            else:
+                play = ai_choice(NumOfSticks)
+                ai_win_dict[NumOfSticks] = play
+                print("Hello within AI move, Sticks: ", NumOfSticks, " Play: ", play)
+                player = 1
+            NumOfSticks = NumOfSticks - play
             player = 1
-        NumOfSticks = NumOfSticks - play
-        player = 1
-        #print(ai_win_dict)
-    else: 
-        #This is the human player loop
-        if NumOfSticks == 1: 
-            NumofGames -= 1
-            NumOfSticks = 0
-            ai_win_dict.clear()
-        elif NumOfSticks == 2:
-            play = 1
-        elif NumOfSticks == 3:
-            play = 2
-        elif NumOfSticks == 4:
-            play = 3
+            #print(ai_win_dict)
         else: 
-            play = human_choice(NumOfSticks)
-            print("Hello within Human move, Sticks: ", NumOfSticks, " Play: ", play)
+            #This is the human player loop
+            if NumOfSticks == 1:
+                NumOfSticks = 0
+                winner = 2
+            elif NumOfSticks == 2:
+                play = 1
+                winner = 1
+            elif NumOfSticks == 3:
+                play = 2
+                winner = 1
+            elif NumOfSticks == 4:
+                play = 3
+                winner = 1
+            else: 
+                play = human_choice(NumOfSticks)
+                print("Hello within Human move, Sticks: ", NumOfSticks, " Play: ", play)
+                player = 2
+            NumOfSticks = NumOfSticks - play
             player = 2
-        NumOfSticks = NumOfSticks - play
-        player = 2         
+    return winner       
 
+def increase_odds(dict):
+    pass
 
-print(ai_win_dict)
-    
+def main():
+    winner = main_game_loop(NumOfSticks, 1)
+    print(ai_win_dict)
+    if winner == 2:
+        print ("Ai Won!")
+        increase_odds(ai_win_dict)
+    else:
+        print ("Human Won!")
+        ai_win_dict.clear()
+
+main()    
