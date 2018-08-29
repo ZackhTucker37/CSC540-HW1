@@ -19,11 +19,9 @@ AIbins = [[1,2,3] for i in range(0, NumOfSticks+1)] #this creates a bin, where e
                                                #the potential moves to be chosen.
 
 global ai_win_dict
-ai_win_dict = {
-    "1" : "ok"
-}
+ai_win_dict = {}
 
-player = 1 #1 is human, 2 is AI...this is to swap players at the end of a given turn
+player = random.choice([1, 2]) #1 is human, 2 is AI...this is to swap players at the end of a given turn
 
 #AIbins[1].append(1) #this will add the winning moves to the list, increasing it's probability
 
@@ -55,9 +53,10 @@ def main_game_loop(NumOfSticks, player):
                 winner = 2
             else:
                 play = ai_choice(NumOfSticks)
-                ai_win_dict[NumOfSticks] = play
+                #ai_win_dict[NumOfSticks] = play
                 print("Hello within AI move, Sticks: ", NumOfSticks, " Play: ", play)
                 player = 1
+            ai_win_dict[NumOfSticks] = play
             NumOfSticks = NumOfSticks - play
             player = 1
             #print(ai_win_dict)
@@ -84,14 +83,16 @@ def main_game_loop(NumOfSticks, player):
     return winner       
 
 def increase_odds(dict):
-    pass
+    print(dict)
+    for x in dict:
+        AIbins[x].append(dict[x])
+    print(AIbins)
 
 def main():
     winner = main_game_loop(NumOfSticks, 1)
-    print(ai_win_dict)
     if winner == 2:
         print ("Ai Won!")
-        increase_odds(ai_win_dict)
+        increase_odds(ai_win_dict) #this function is going to loop through the dict and add winning moves
     else:
         print ("Human Won!")
         ai_win_dict.clear()
